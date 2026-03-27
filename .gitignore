@@ -1,0 +1,12 @@
+node_modules/
+.env
+.env.local
+.env.*
+dist/
+build/
+*.db
+*.db-journal
+__pycache__/
+*.pyc
+.DS_Store
+*.log

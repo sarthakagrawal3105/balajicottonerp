@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Customer {
+  id        Int      @id @default(autoincrement())
+  name      String
+  type      String   // "FARMER", "BUYER", "BROKER", "TRANSPORTER"
+  phone     String?
+  gstin     String?
+  createdAt DateTime @default(now())
+  
+  purchases Purchase[] @relation("SupplierPurchases") // Purchases from this customer (Farmer/Supplier)
+  sales     Sale[]     @relation("BuyerSales")        // Sales to this customer (Buyer)
+}
+
+model Purchase {
+  id         Int      @id @default(autoincrement())
+  date       DateTime @default(now())
+  
+  supplierId Int
+  supplier   Customer @relation("SupplierPurchases", fields: [supplierId], references: [id])
+  
+  type       String   // "RAW_COTTON" or "SEED"
+  netWeight  Float    // In QTL
+  rate       Float    // Price per QTL
+  amount     Float
+  vehicleNo  String?
+  
+  createdAt  DateTime @default(now())
+}
+
+model Sale {
+  id         Int      @id @default(autoincrement())
+  date       DateTime @default(now())
+  
+  buyerId    Int
+  buyer      Customer @relation("BuyerSales", fields: [buyerId], references: [id])
+  
+  type       String   // "BALES" or "SEED"
+  quantity   Float    // Number of Bales or Bags
+  totalWeight Float   // In KG or QTL
+  rate       Float
+  amount     Float
+  
+  createdAt  DateTime @default(now())
+}
+
+model Production {
+  id           Int      @id @default(autoincrement())
+  date         DateTime @default(now())
+  
+  inputBatches String?  // PR Numbers used from stock
+  inputWeight  Float    // Raw Kapas used (QTL)
+  lintProduced Float    // Bales weight output
+  seedProduced Float    // Seed weight output
+  waste        Float    // Shortage / Borda / Kaudi
+  
+  createdAt    DateTime @default(now())
+}
+
+model Expense {
+  id          Int      @id @default(autoincrement())
+  date        DateTime @default(now())
+  category    String   // "ELECTRICITY", "LABOUR", "MAINTENANCE", "MISC"
+  amount      Float
+  description String?
+  
+  createdAt   DateTime @default(now())
+}
