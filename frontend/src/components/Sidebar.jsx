@@ -42,7 +42,7 @@ const Sidebar = () => {
           <FileText size={20} strokeWidth={2.5} />
           Factory Expenses
         </NavLink>
-        <a href="http://localhost:8501/streamlit" className="nav-link">
+        <a href="https://balajicottonerpgit-qdkezwnvyhkqja4kdbqcgc.streamlit.app/" target="_blank" rel="noopener noreferrer" className="nav-link">
           <FileText size={20} strokeWidth={2.5} />
           Bill Generator
         </a>
